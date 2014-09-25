@@ -1,0 +1,42 @@
+<div class="container">
+	<div class="row-fluid col-sm-11 col-sm-offset-1">
+		<form name="appsForm" class="form-horizontal col-md-6" role="form" data-ng-submit="save(appsForm.$valid)" novalidate>
+			<!--
+			<div class="form-group" ng-class="{ 'has-error' : submitted && appsForm.name.$invalid }">
+				<label class="col-sm-2 control-label" for="name">{{ 'ColName' | translate}}</label>
+				<div class="col-sm-10">
+					<input type="text" name="name" data-ng-model="formData.name" class="form-control" id="name" placeholder="{{ 'ColName' | translate}}"></input>
+				</div>
+			</div>
+		-->
+			<div class="form-group" ng-class="{ 'has-error' : submitted && appsForm.appid.$invalid }">
+				<label class="col-sm-2 control-label" for="appid">{{ 'ColAppID' | translate}}</label>
+				<div class="col-sm-10">
+					<input type="text" name="appid" data-ng-model="formData.appid" class="form-control" id="appid" placeholder="{{ 'ColAppID' | translate}}"></input>
+				</div>
+			</div>
+			<div class="form-group" ng-class="{ 'has-error' : submitted && appsForm.logo.$invalid }">
+				<label class="col-sm-2 control-label" for="logo">{{ 'ColLogo' | translate}}</label>
+				<div class="col-sm-10">
+					<input type="text" name="logo" data-ng-model="formData.logo" class="form-control" id="logo" placeholder="{{ 'ColLogo' | translate}}"></input>
+				</div>
+			</div>
+			<div class="form-group" ng-class="{ 'has-error' : submitted && appsForm.category.$invalid }">
+				<label class="col-sm-2 control-label" for="">{{ 'ColCategory' | translate}}</label>
+				<div class="col-sm-10">
+					<input type="text" name="category" data-ng-model="formData.category" class="form-control" id="category" placeholder="{{ 'ColCategory' | translate}}"></input>
+				</div>
+			</div>
+			<div>
+				<a type="button" href="/apps" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Cancel">
+					<span class="fa fa-close fa-fw"></span>
+					{{ 'Cancel' | translate}} 
+				</a>
+				<button type="submit" class="btn btn-success pull-right" data-toggle="tooltip" data-placement="top" title="Save">
+					<span class="fa fa-save fa-fw"></span>
+					 {{ 'Save' | translate}}
+				</button>
+			</div>
+		</form>
+	</div>
+</div>

@@ -1,0 +1,38 @@
+<div class="container">
+	<div class="row-fluid col-sm-12">
+		<h1>{{ 'AppTitle' | translate}}</h1>
+		<a ui-sref="apps" type="button" class="btn btn-default pull-right">
+			<span class="fa fa-align-justify"></span>
+		</a>
+		<a ui-sref="appsAdd" type="button" class="btn btn-default pull-right">
+			<span class="fa fa-plus"></span>
+		</a>
+		<!--
+		<a class="btn btn-primary" ng-click="{{ {'name': 'value' } | json}}" href=''>Export to CSV</a>
+	-->
+		<hr />
+	</div>
+	<div class="row-fluid">
+        <div ui-sref="{{app.appid}}" class="col-xs-6 col-md-3 tile tile-wide tile-teal"  ng-repeat="app in apps">
+        	<!--
+        		<button ng-click="delete(p)" type="button" class="btn btn-default btn-xs"
+						data-toggle="tooltip" data-placement="top" title="Delete" pull-right>
+					<span class="fa fa-trash-o fa-fw fa-links"></span>
+				</button>
+			-->
+        		<h1>
+       				<span class="fa fa-10x {{app.logo}} fa-links"></span><br /> {{app.name}}
+       			</h1>
+       			<p>{{app.desc}}</p>
+		</div>
+		<!--
+        <div class="col-xs-6 col-md-3"  ng-repeat="app in apps">
+        	<a href="#" class="thumbnail">
+        		<h1 text-center>
+       				<span class="fa fa-10x {{app.logo}} text-center"></span><br /> {{app.name}}
+       			</h1>
+			</a>
+		</div>
+	-->
+	</div>
+</div>
