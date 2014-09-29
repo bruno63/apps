@@ -21,18 +21,9 @@
 				</button>
 			-->
         		<h1>
-       				<span class="fa fa-10x {{app.logo}} fa-links"></span><br /> {{app.name}}
+       				<span class="fa fa-10x {{app.logo}} fa-links"></span><br /> {{ getAppName(app) }}
        			</h1>
-       			<p>{{app.desc}}</p>
+       			<p>{{ getAppDesc(app) }}</p>
 		</div>
-		<!--
-        <div class="col-xs-6 col-md-3"  ng-repeat="app in apps">
-        	<a href="#" class="thumbnail">
-        		<h1 text-center>
-       				<span class="fa fa-10x {{app.logo}} text-center"></span><br /> {{app.name}}
-       			</h1>
-			</a>
-		</div>
-	-->
 	</div>
 </div>

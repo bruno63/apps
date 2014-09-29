@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('apps')
-.controller('AppsAddCtrl', function ($scope, $log, $location, AppsRestService, AppConfig) {
+.controller('AppsAddCtrl', function ($scope, $log, $location, $translatePartialLoader, AppsService, AppConfig) {
 	AppConfig.setCurrentApp('Apps', 'fa-cubes', 'apps', 'app/apps/menu.html');
+	$translatePartialLoader.addPart('apps');
+
 	$scope.save = function (isValid) {
 		$log.log('entering AppsAddCtrl:save(' + isValid + ')');
 		$log.log('new app:');
@@ -11,7 +13,7 @@ angular.module('apps')
 		$log.log('logo    : <' + this.formData.logo + '>');
 		$log.log('category: <' + this.formData.category + '>');
 		if (isValid) {
-			AppsRestService.all('apps').post(this.formData).then(function () {
+			AppsService.all('apps').post(this.formData).then(function () {
 				$location.path('/apps');
 			});
 		}

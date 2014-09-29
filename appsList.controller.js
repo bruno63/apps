@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('apps')
-.controller('AppsListCtrl', function ($rootScope, $scope, $filter, $log, $translatePartialLoader, AppConfig, AppsRestService, ngTableParams) {
+.controller('AppsListCtrl', function ($rootScope, $scope, $filter, $log, $translatePartialLoader, AppConfig, AppsService, ngTableParams) {
 	AppConfig.setCurrentApp('Apps', 'fa-cubes', 'apps', 'app/apps/menu.html');
 	$translatePartialLoader.addPart('apps');
 
@@ -16,7 +16,7 @@ angular.module('apps')
         total:    0,					// length of data
         counts: $scope.counts,		// set to an empty array to disable the toggler
        	getData: function($defer, params) {
-       		AppsRestService.all('apps').getList().then(function(data) {
+       		AppsService.getRawApps().then(function(data) {
        	    	var filteredData = params.filter() ? $filter('filter')(data, params.filter()) : data;
         		var orderedData = params.sorting() ? $filter('orderBy')(filteredData, params.orderBy()) : filteredData; 
        			params.total(orderedData.length);

@@ -26,26 +26,15 @@
 	We use the fork from davisford. Tested ok in Chrome and Safari (Excel not started, mime type probably needs to be configured accordingly)
 	Goal: formulate the whole table-handling into a directive or service incl. import/export/crud-operations.
 -->
-<!--
 		<a class="btn btn-primary" ng-click='csv.generate($event, "apps.csv")' href=''>Export to CSV</a>
-		<a class="btn btn-primary" ng-click="{{ {'name': 'value' } | json}}" href=''>Export to CSV</a>
--->
 		<input type="checkbox" ng-model="showFilter"> {{ 'ShowFilter' | translate}}</input>
 		<input type="checkbox" ng-init="counts.length > 0" ng-click="toggleCounts()"> {{ 'ShowToggler' | translate}}</input>
 		<hr />
 		<div ui-view=""></div>
 
 		<div class="table-responsive">
-			<table ng-table="tableParams" show-filter="showFilter" class="table table-hover">
+			<table ng-table="tableParams" show-filter="showFilter" class="table table-hover" export-csv='csv'>
 				<tr ng-repeat="p in $data">
-					<!--
-					<td data-title="'Name'" sortable="'name'" filter="{ 'name': 'text' }">
-						<span ng-if="!p.$edit">{{ p.name }}</span>
-						<div ng-if="p.$edit">
-							<input class="form-control" type="text" ng-model="p.name"></input>
-						</div>
-					</td>
-				-->
 					<td data-title="'AppID'" sortable="'appid'" filter="{ 'appid': 'text' }">
 						<span ng-if="!p.$edit">{{ p.appid }}</span>
 						<div ng-if="p.$edit">
@@ -63,6 +52,12 @@
 						<div ng-if="p.$edit">
 							<input class="form-control" type="text" ng-model="p.category"></input>
 						</div>
+					</td>
+					<td>
+						<button ng-if="!p.$edit" ng-click="p.showDetails=true" type="button"
+							class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="{{ 'ShowDetails' | translate}}">
+							<span class="fa fa-language fa-fw"></span>
+						</button>
 					</td>
 					<td>
 						<button ng-if="!p.$edit" ng-click="p.$edit = true" type="button" 
