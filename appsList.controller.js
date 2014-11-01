@@ -28,7 +28,7 @@ angular.module('apps')
 	// todo: does not work as expected yet, should turn on and off the toggler. Toggler seems to be set correctly in $scope.counts,
 	// but has no effect on the view (reload seems not to work)
     $scope.toggleCounts = function() {
-    	$log.log('entering AppsListCtrl:toggleCounts, $scope.counts=<' + $scope.counts + '>');
+    	// $log.log('entering AppsListCtrl:toggleCounts, $scope.counts=<' + $scope.counts + '>');
 
     	if ($scope.counts.length > 0) {
     		$scope.counts = [];
@@ -40,16 +40,16 @@ angular.module('apps')
     };
 
     $scope.export = function() {
-		$log.log('entering AppsListCtrl:export into apps.csv'); 
+		$log.log('entering AppsListCtrl:export into apps.csv (not implemented yet'); 
  //   	$scope.csv.generate($event, 'apps.csv');
     };
 
     $scope.clearFilter = function() {
-		$log.log('entering AppsListCtrl:clearFilter'); 
+		// $log.log('entering AppsListCtrl:clearFilter'); 
 		$scope.tableParams.filter({});
 	};
 	$scope.clearSorting = function() {
-		$log.log('entering AppsListCtrl:clearSorting'); 
+		// $log.log('entering AppsListCtrl:clearSorting'); 
 		$scope.tableParams.sorting({});
 	};
 
@@ -60,7 +60,7 @@ angular.module('apps')
 
 	// inline edit
 	$scope.save = function(data) {
-		$log.log('entering AppsListCtrl:save(' + data + ')');
+		// $log.log('entering AppsListCtrl:save(' + data + ')');
 		var currentApp = AppsService.one('apps', data._id);
 		currentApp = data;
 		currentApp.put().then(function() {
@@ -69,7 +69,7 @@ angular.module('apps')
 	};
 
 	$scope.delete = function (data) {
-		$log.log('entering AppsListCtrl:delete(' + data + ')');
+		// $log.log('entering AppsListCtrl:delete(' + data + ')');
 		if(window.confirm('Are you sure?')) {
 			AppsService.one('apps', data._id).remove().then(function () {
 				$scope.tableParams.reload();
