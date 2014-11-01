@@ -61,7 +61,7 @@ angular.module('apps')
 	// inline edit
 	$scope.save = function(data) {
 		$log.log('entering AppsListCtrl:save(' + data + ')');
-		var currentApp = AppsRestService.one('apps', data._id);
+		var currentApp = AppsService.one('apps', data._id);
 		currentApp = data;
 		currentApp.put().then(function() {
 			data.$edit=false;
@@ -71,7 +71,7 @@ angular.module('apps')
 	$scope.delete = function (data) {
 		$log.log('entering AppsListCtrl:delete(' + data + ')');
 		if(window.confirm('Are you sure?')) {
-			AppsRestService.one('apps', data._id).remove().then(function () {
+			AppsService.one('apps', data._id).remove().then(function () {
 				$scope.tableParams.reload();
 			});
 		}

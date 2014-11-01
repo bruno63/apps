@@ -11,14 +11,14 @@ angular.module('apps')
 	});
 
 	$scope.getAppDesc = function(app) {
-		var _desc = app.desc[AppConfig.getCurrentLang()] == null ?
+		var _desc = app.desc[AppConfig.getCurrentLang()] === null ?
 			app.desc[cfg.DEFAULT_LANG].text : app.desc[AppConfig.getCurrentLang()].text;
 		$log.log('AppsGridCtrl.getAppDesc() = ' + _desc);
 		return _desc;
 	};
 
 	$scope.getAppName = function(app) {
-		var _name = app.name[AppConfig.getCurrentLang()] == null ?
+		var _name = app.name[AppConfig.getCurrentLang()] === null ?
 			app.name[cfg.DEFAULT_LANG].text : app.name[AppConfig.getCurrentLang()].text;
 		$log.log('AppsGridCtrl.getAppName() = ' + _name);
 		return _name;
