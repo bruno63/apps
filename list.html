@@ -1,18 +1,29 @@
 <div class="container">
 	<div class="row-fluid col-sm-12">
 		<h1>{{ 'AppTitle' | translate}}</h1>
+		<a ui-sref="apps" type="button" class="btn btn-default pull-right">
+			<span class="fa fa-th"></span>
+		</a>
 		<hr />
 		<div class="table-responsive" ui-i18n="{{getLang()}}">
-			<!--
 			<div class="custom-csv-link-location">
 				<label:Your CSV will show below:</label>
 				<span class="ui-grid-exporter-csv-link">&nbsp</span>
 			</div>
-		-->
-			<div id="grid" ui-grid="gridOptions" ui-grid-edit ui-grid-resize-columns ui-grid-selection ui-grid-exporter class="grid"></div>
+			<div id="grid" ui-grid="gridOptions" ui-grid-edit ui-grid-row-edit ui-grid-cellNav ui-grid-resize-columns ui-grid-selection ui-grid-exporter ui-grid-importer class="grid"></div>
 			<!-- add ui-grid-paging (but it seems not stable yet) -->
 		</div>
 	</div>
 </div>
-
-
+<div class="container">
+	<div class="row-fluid col-sm-12">
+		<hr />
+		<button type="button" id="addData" class="btn btn-info" ng-click="addData()">Add Data</button>
+		<button type="button" id="removeFirstRow" class="btn btn-info" ng-click="removeFirstRow()">Remove First Row</button>
+		<div class="pull-right">
+			<a class="btn btn-inverse btn-success" href="/">
+				{{ 'OK' | translate }}
+			</a>
+		</div>
+	</div>
+</div>
