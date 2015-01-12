@@ -1,79 +1,169 @@
 'use strict';
 
+var appCategories = {
+	ACHome: 1,
+	Productivity: 2,
+	Test: 3,
+	System: 4,
+	Games: 5,
+	Finance: 6
+};
+
 angular.module('apps')
-.controller('AppsListCtrl', function ($rootScope, $scope, $filter, $log, $translatePartialLoader, AppConfig, AppsService, ngTableParams) {
+.filter('mapCategories', function($log) {
+	var appCategoriesReversed = {
+		1: 'Home',
+		2: 'Productivity',
+		3: 'Test',
+		4: 'System',
+		5: 'Games',
+		6: 'Finance'
+	};
+
+	return function(input) {
+		if (input < 1 || input > appCategoriesReversed.length) {
+			$log.log('**** ERROR: apps.mapCategories(' + input + ') -> input is out of bounds');
+			return '';
+		} else {
+			// $log.log('apps.mapCategories(' + input + ') = ' + appCategoriesReversed[input]);
+			return appCategoriesReversed[input];
+		}
+	};
+})
+.controller('AppsListCtrl', function ($rootScope, $scope, $filter, $http, $log, $translatePartialLoader, $timeout, $interval, uiGridConstants, AppConfig) {
 	AppConfig.setCurrentApp('Apps', 'fa-cubes', 'apps', 'app/apps/menu.html');
 	$translatePartialLoader.addPart('apps');
 
-	$scope.counts = [10, 25, 50, 100];  // set to an empty array to disable the toggler
-
-	// see alternative solution for initial data load using promise to load data into ng-table: 
-	// http://stackoverflow.com/questions/23608247/how-to-refresh-ng-table-loaded-from-an-http-request-with-dynamic-data
-	$scope.tableParams = new ngTableParams({
-		page:     1,            		// show first page
-		count:   10          			// count per page
-	}, {
-        total:    0,					// length of data
-        counts: $scope.counts,		// set to an empty array to disable the toggler
-       	getData: function($defer, params) {
-       		AppsService.getRawApps().then(function(data) {
-       	    	var filteredData = params.filter() ? $filter('filter')(data, params.filter()) : data;
-        		var orderedData = params.sorting() ? $filter('orderBy')(filteredData, params.orderBy()) : filteredData; 
-       			params.total(orderedData.length);
-       			$defer.resolve($scope.data = orderedData.slice((params.page() -1) * params.count(), params.page() * params.count()));           
-       		}, 500);
-       	}
-    });
-
-	// todo: does not work as expected yet, should turn on and off the toggler. Toggler seems to be set correctly in $scope.counts,
-	// but has no effect on the view (reload seems not to work)
-    $scope.toggleCounts = function() {
-    	// $log.log('entering AppsListCtrl:toggleCounts, $scope.counts=<' + $scope.counts + '>');
-
-    	if ($scope.counts.length > 0) {
-    		$scope.counts = [];
-    	}
-    	else {
-    		$scope.counts = [10, 25, 50, 100];
-    	}
-    	$scope.tableParams.reload();
-    };
-
-    $scope.export = function() {
-		$log.log('entering AppsListCtrl:export into apps.csv (not implemented yet'); 
- //   	$scope.csv.generate($event, 'apps.csv');
-    };
-
-    $scope.clearFilter = function() {
-		// $log.log('entering AppsListCtrl:clearFilter'); 
-		$scope.tableParams.filter({});
-	};
-	$scope.clearSorting = function() {
-		// $log.log('entering AppsListCtrl:clearSorting'); 
-		$scope.tableParams.sorting({});
+	$scope.saveRow = function( rowEntity ) {
+		var _uri = '/api/apps/' + rowEntity.id;
+		$log.log('AppsListCtrl.saveRow(' + rowEntity.toJSON() + ') -> $http.put(' + _uri + ')');
+		var promise = $http.put(_uri);
+		$scope.gridApi.rowEdit.setSavePromise( $scope.gridApi.grid, rowEntity, promise.promise );
 	};
 
-	$scope.getDate = function(dateStr) {
-		// $log.log('entering AppsListCtrl:getDate(' + dateStr + ')'); 
-		return new Date(dateStr);
-	};
+	$scope.gridOptions = {
+		minRowsToShow: 20,
+		enableSorting: true,
+		enableFiltering: true,
+		enableHiding: true,
+		enableColumnMenus: true,
+		enableGridMenu: true,
+		// pagingPageSizes: [25, 50, 75],
+		// pagingPageSize: 25,
+		enableCellEditOnFocus: true,
+		enableSelectAll: true,
 
-	// inline edit
-	$scope.save = function(data) {
-		// $log.log('entering AppsListCtrl:save(' + data + ')');
-		var currentApp = AppsService.one('apps', data._id);
-		currentApp = data;
-		currentApp.put().then(function() {
-			data.$edit=false;
-		});
-	};
+		columnDefs: [
+			{	name: 'id', field: '_id', displayName: 'ID', enableCellEdit: false, visible: false, width: '*' },
+			{	name: 'appid', field: 'appid', displayName: 'APPID', visible: true, width: '*',
+					sort: { direction: uiGridConstants.ASC } },
+			{ 	name: 'logo', field: 'logo', displayName: 'Logo', visible: true, width: '*' }, 
+			{ 	name: 'category', field: 'category', displayName: 'Category', visible: true, width: '*',
+					cellFilter: 'mapCategories',
+					editDropdownFilter: 'translate',
+					editableCellTemplate: 'ui-grid/editDropdownEditor',
+					editDropdownOptionsArray: [
+						{ id: 1, value: 'Home' },
+						{ id: 2, value: 'Productivity' },
+						{ id: 3, value: 'Test' },
+						{ id: 4, value: 'System' },
+						{ id: 5, value: 'Games' },
+						{ id: 6, value: 'Finance' },
+					]
+			}
+		],
+		// Importing Data
+		importerDataAddCallback: function (grid, newObjects) {
+			$scope.data = $scope.data.concat( newObjects );
+		},
+		// pdf export
+		exporterPdfDefaultStyle: { fontSize: 9},
+		exporterPdfTableStyle: { margin: [0, 5, 0, 15]},
+		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red'},
+		exporterPdfHeader: { text: 'Application Registry', style: 'headerStyle'},
+		exporterPdfFooter: function(currentPage, pageCount) {
+			return { text: currentPage.toString() + ' of ' + pageCount.toString(), style: 'footerStyle'};
+		},
+		
+		exporterPdfCustomFormatter: function(docDefinition) {
+			docDefinition.styles.headerStyle = { fontSize: 22, bold: true };
+			docDefinition.styles.footerStyle = { fontSize: 10, bold: true };
+			return docDefinition;
+		},
+		exporterPdfOrientation: 'portrait',
+		exporterPdfPageSize: 'A4',
+		exporterPdfMaxGridWidth: 500,
 
-	$scope.delete = function (data) {
-		// $log.log('entering AppsListCtrl:delete(' + data + ')');
-		if(window.confirm('Are you sure?')) {
-			AppsService.one('apps', data._id).remove().then(function () {
-				$scope.tableParams.reload();
+		// csv export -> not working, default 'download.csv' is taken
+		exporterCsvFilename: 'appreg.csv',
+		exporterCsvLinkElement: angular.element(document.querySelectorAll('.custom-csv-link-location')),
+
+		onRegisterApi: function(gridApi) {
+			$scope.gridApi = gridApi;
+			gridApi.rowEdit.on.saveRow($scope, $scope.saveRow);
+			// force grid to resize 
+			$timeout(function() {
+				gridApi.core.handleWindowResize();
 			});
+			/*
+			gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
+				$scope.msg.lastCellEdited = 'edited row id: ' + rowEntity.id + ' Column: ' + colDef.name + ' newValue: ' + newValue + ' oldValue: ' + oldValue;
+				$scope.apply();
+			});
+*/
 		}
 	};
+
+	var _listUri = '/api/apps';
+	$http.get(_listUri)
+	.success(function(data, status) {
+		for (var i = 0; i < data.length; i++) {
+			// convert the category string expressions into indexes in order to work with dropdown list
+			data[i].category = appCategories[data[i].category];
+		}
+		$scope.gridOptions.data = data;
+		$log.log('**** SUCCESS: GET(' + _listUri + ') returns with ' + status);
+    	// $log.log('data=<' + JSON.stringify(data) + '>');
+	})
+	.error(function(data, status) {
+  		// called asynchronously if an error occurs or server returns response with an error status.
+    	$log.log('**** ERROR:  GET(' + _listUri + ') returns with ' + status);
+    	// $log.log('data=<' + JSON.stringify(data) + '>');
+  	});	
+
+
+	$scope.addData = function() {
+//		var n = $scope.gridOptions.data.length + 1;
+		$log.log('appreg.addData is not yet implemented; please add entries manually in appreg.seed on server side');
+		/*
+		$scope.gridOptions.data.push({
+			'datum': new Date().toLocaleDateString(AppConfig.getCurrentLanguageKey()),
+			'from': 'myself',
+			'to': 'you',
+			'ptype': $translate('PTBirthday'),
+			'comment': 'bla'
+		});
+*/
+	};
+
+	$scope.removeFirstRow = function() {
+//		if ($scope.gridOptions.data.length > 0) {
+			$scope.gridOptions.data.splice(0, 1);
+//		}
+	};
+
+  	$scope.export = function() {
+  		if ($scope.exportFormat === 'csv') {
+  			var myElement = angular.element(document.querySelectorAll('.custom-csv-link-location'));
+  			$scope.gridApi.exporter.csvExport($scope.exportRowType, $scope.exportColumnType, myElement);
+  		} else if ($scope.exportFormat === 'pdf') {
+  			$scope.gridApi.exporter.pdfExport($scope.exportRowType, $scope.exportColumnType);
+  		} else {
+  			$log.log('**** ERROR: PresentsListCtrl.export(): unknown exportFormat: ' + $scope.exportFormat);
+  		}
+  	};
+
+  	$scope.getLang = function() {
+  		return AppConfig.getCurrentLanguageKey();
+  	};
 });

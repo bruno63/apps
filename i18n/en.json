@@ -3,5 +3,11 @@
 	"ColName": "Name",
 	"ColAppID": "AppID",
 	"ColLogo": "Logo",
-	"ColCategory": "Category"
+	"ColCategory": "Category",
+	"Home": "Home",
+	"Productivity": "Productivity",
+	"Test": "Test",
+	"System": "System",
+	"Games": "Games",
+	"Finance": "Finance"
 }
