@@ -3,14 +3,14 @@
 angular.module('apps', ['core'])
 .config(function ($stateProvider) {
 	$stateProvider
-	.state('apps', {
-		url: '/apps',
+	.state('appsList', {
+		url: '/appsList',
 		templateUrl: 'app/apps/list.html',
 		controller: 'AppsListCtrl',
 		authenticate: true
 	})
-	.state('appsGrid', {
-		url: '/appsGrid',
+	.state('apps', {
+		url: '/apps',
 		templateUrl: 'app/apps/grid.html',
 		controller: 'AppsGridCtrl',
 		authenticate: true
