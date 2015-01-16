@@ -31,7 +31,7 @@ angular.module('apps')
 	};
 })
 .controller('AppsListCtrl', function ($rootScope, $scope, $filter, $http, $log, $translatePartialLoader, $timeout, $interval, uiGridConstants, AppConfig) {
-	AppConfig.setCurrentApp('Apps', 'fa-cubes', 'apps', 'app/apps/menu.html');
+	AppConfig.setCurrentApp('AppsAppName', 'fa-cubes', 'apps', 'app/apps/menu.html');
 	$translatePartialLoader.addPart('apps');
 
 	$scope.saveRow = function( rowEntity ) {
