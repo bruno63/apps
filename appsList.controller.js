@@ -33,7 +33,7 @@ angular.module('apps')
 .controller('AppsListCtrl', function ($rootScope, $scope, $filter, $http, $log, $translatePartialLoader, $timeout, $interval, uiGridConstants, cfg) {
 	cfg.GENERAL.CURRENT_APP = 'apps';
 	$translatePartialLoader.addPart('apps');
-	$log.log('AppsListCtrl/cfg = ' + JSON.stringify(cfg));
+	$log.log('AppsListCtrl/cfg = ' + JSON.stringify(cfg, null, '\t'));
 
 	$scope.saveRow = function( rowEntity ) {
 		var _uri = '/api/apps/' + rowEntity.id;

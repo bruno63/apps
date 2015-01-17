@@ -4,7 +4,7 @@ angular.module('apps')
 .controller('AppsGridCtrl', function($scope, $log, $translatePartialLoader, cfg, AppsService) {
 	cfg.GENERAL.CURRENT_APP = 'apps';
 	$translatePartialLoader.addPart('apps');
-	$log.log('AppsGridCtrl/cfg = ' + JSON.stringify(cfg));
+	$log.log('AppsGridCtrl/cfg = ' + JSON.stringify(cfg, null, '\t'));
 
 	AppsService.getRawApps().then(function(apps) {
 		$scope.apps = apps;
