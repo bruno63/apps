@@ -30,9 +30,10 @@ angular.module('apps')
 		}
 	};
 })
-.controller('AppsListCtrl', function ($rootScope, $scope, $filter, $http, $log, $translatePartialLoader, $timeout, $interval, uiGridConstants, AppConfig) {
-	AppConfig.setCurrentApp('AppsAppName', 'fa-cubes', 'apps', 'app/apps/menu.html');
+.controller('AppsListCtrl', function ($rootScope, $scope, $filter, $http, $log, $translatePartialLoader, $timeout, $interval, uiGridConstants, cfg) {
+	cfg.GENERAL.CURRENT_APP = 'apps';
 	$translatePartialLoader.addPart('apps');
+	$log.log('AppsListCtrl/cfg = ' + JSON.stringify(cfg));
 
 	$scope.saveRow = function( rowEntity ) {
 		var _uri = '/api/apps/' + rowEntity.id;
@@ -164,6 +165,6 @@ angular.module('apps')
   	};
 
   	$scope.getLang = function() {
-  		return AppConfig.getCurrentLanguageKey();
+  		return cfg.GENERAL.LANGS[cfg.GENERAL.CURRENT_LANG_ID];
   	};
 });

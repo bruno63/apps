@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('apps')
-.controller('AppsAddCtrl', function ($scope, $log, $location, $translatePartialLoader, AppsService, AppConfig) {
-	AppConfig.setCurrentApp('Apps', 'fa-cubes', 'apps', 'app/apps/menu.html');
+.controller('AppsAddCtrl', function ($scope, $log, $location, $translatePartialLoader, AppsService, cfg) {
+	cfg.GENERAL.CURRENT_APP = 'apps';
 	$translatePartialLoader.addPart('apps');
+	$log.log('AppsAddCtrl/cfg = ' + JSON.stringify(cfg));
 
 	$scope.save = function (isValid) {
 		$log.log('entering AppsAddCtrl:save(' + isValid + ')');
